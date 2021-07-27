@@ -30,7 +30,8 @@
           <p class="my-4 text-xl font-bold">Area: {{ meal.strArea }}</p>
           <p class="text-xl font-bold">Category: {{ meal.strCategory }}</p>
         </div>
-        <button
+        <div class="flex items-center justify-between gap-32">
+          <button
           @click="addToCart(meal)"
           class="
             bg-green-600
@@ -60,6 +61,9 @@
           </svg>
           <span>Add To Cart</span>
         </button>
+
+        <p class="font-light">Ksh 450.00</p>
+        </div>
       </div>
     </div>
     <div class="container mx-auto w-1/2 mt-6">
