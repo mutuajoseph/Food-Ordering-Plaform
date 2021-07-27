@@ -23,16 +23,16 @@
     </button>
     <div class="container p-4 mx-auto meal-flex border-2 w-1/2">
       <img class="h-96 w-1/2" :src="meal.strMealThumb" alt="meal image" />
-      <div>
+      <div class="flex flex-col justify-between">  
         <p class="text-2xl font-bold">{{ meal.strMeal }}</p>
-        <p class="text-xl font-bold my-4">Tags: {{ meal.strTags }}</p>
-        <p class="my-4 text-xl font-bold">Area: {{ meal.strArea }}</p>
-        <p class="text-xl font-bold">Category: {{ meal.strCategory }}</p>
+        <div>
+          <p class="text-xl font-bold my-4">Tags: {{ meal.strTags }}</p>
+          <p class="my-4 text-xl font-bold">Area: {{ meal.strArea }}</p>
+          <p class="text-xl font-bold">Category: {{ meal.strCategory }}</p>
+        </div>
         <button
           @click="addToCart(meal)"
           class="
-            mt-20
-            mx-24
             bg-green-600
             text-white
             w-36
