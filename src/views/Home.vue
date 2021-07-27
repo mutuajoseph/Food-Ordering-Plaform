@@ -2,7 +2,7 @@
   <div id="home" class="font">
     <div class="background">
       <Header />
-      <div class="container mx-auto">
+      <div class="container mx-auto mt-20">
         <div class="h-screen flex justify-around items-center mt-4">
           <div>
             <h1 class="text-9xl hero-text">Hallo :)</h1>
