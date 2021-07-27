@@ -18,6 +18,7 @@
       >
         <div class="overflow-hidden relative">
           <img
+            title="CLick to view more details about the meal"
             @click="getProduct(item.idMeal)"
             class="
               w-60
@@ -49,9 +50,9 @@
             </h1></a
           >
           <div class="flex py-2">
-            <p class="mr-2 text-xs text-gray-600">${{ price }}</p>
+            <p class="mr-2 text-xs text-gray-600">ksh {{ price }}</p>
             <p class="mr-2 text-xs text-red-600 line-through">
-              ${{ discount }}
+              ksh {{ discount }}
             </p>
           </div>
           <div class="flex">
@@ -66,23 +67,14 @@
               <p class="text-gray-500 font-medium text-sm">({{ rating }})</p>
             </div>
           </div>
-          <button class="bg-orange text-white py-2 rounded-xl">
+          <button
+            @click="addToCart(item)"
+            class="bg-orange text-white py-2 rounded-xl"
+          >
             Add to Cart
           </button>
         </div>
       </div>
-      <div v-if="toggleModal" class="fixed overflow-x-auto overflow-y-auto inset-0 flex justify-center items-center z-50">
-        <div class="relative mx-aut0 w-auto max-w-2xl">
-          <div class="bg-white w-full">
-            <span>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Maiores dolorem blanditiis animi magni praesentium doloribus laborum ut, culpa doloremque nobis!</span>
-            <button class="roundedbg-green-500 text-white px-4 py-2">close</button>
-          </div>
-        </div>
-      </div>
-      <div 
-      v-if="toggleModal"
-      class="absolute z-40 inset-0 opacity-25 bg-black"
-      ></div>
     </div>
   </div>
 </template>
@@ -92,8 +84,8 @@ import { mapActions, mapState } from "vuex";
 export default {
   data: () => ({
     toggleModal: false,
-    price: 45.0,
-    discount: 15.0,
+    price: 450.0,
+    discount: 150.0,
     rating: "4.5",
   }),
 
@@ -108,12 +100,17 @@ export default {
   },
 
   methods: {
-    ...mapActions(["FETCH_MEALS", "FETCH_MEAL"]),
+    ...mapActions(["FETCH_MEALS", "ADD_MEAL_TO_CART"]),
     getProduct(item) {
-      this.FETCH_MEAL({
-        id: item
-      })
-      this.toggleModal = true
+      this.$router.push({ path: `/meals/${item}` });
+    },
+
+    addToCart(item) {
+      this.ADD_MEAL_TO_CART({
+        meal: item,
+        price: this.price,
+        quantity: 1,
+      });
     },
   },
 };
@@ -124,5 +121,10 @@ export default {
   background: #264653;
   width: 80%;
   margin: 0 auto;
+  transition: all 1s;
+}
+
+.bg-orange:hover {
+  background: #122026;
 }
 </style>

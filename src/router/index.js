@@ -13,20 +13,24 @@ const routes = [
   {
     path: "/auth",
     name: "Auth",
-    component: () =>
-      import(/* webpackChunkName: "auth" */ "../views/Auth.vue"),
+    component: () => import(/* webpackChunkName: "auth" */ "../views/Auth.vue"),
   },
   {
     path: "/cart",
     name: "Cart",
+    component: () => import(/* webpackChunkName: "auth" */ "../views/Cart.vue"),
+  },
+  {
+    path: "/meals/:id",
+    name: "Product",
     component: () =>
-      import(/* webpackChunkName: "auth" */ "../views/Cart.vue"),
+      import(/* webpackChunkName: "auth" */ "../views/Product.vue"),
   },
 ];
 
 const router = new VueRouter({
   routes,
-  mode: "history"
+  mode: "history",
 });
 
 export default router;

@@ -1,7 +1,7 @@
 <template>
   <div id="auth">
     <Header />
-    <div class="container mx-auto mt-8">
+    <div class="container mx-auto mt-20">
       <div class="flex justify-center gap-12">
         <div class="card p-6 bg-white shadow-md rounded">
           <h3 class="text-center uppercase text-1xl font-semibold">
@@ -16,9 +16,9 @@
             <div class="mb-4">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
-                for="username"
+                for="email"
               >
-                Username
+                Email
               </label>
               <input
                 class="
@@ -31,12 +31,13 @@
                   px-3
                   text-gray-700
                   leading-tight
-                  focus:outline-none
-                  focus:shadow-outline
+                  focus:outline-none focus:shadow-outline
                 "
                 id="username"
                 type="text"
-                placeholder="Username"
+                placeholder="Email"
+                v-model="email"
+                required
               />
             </div>
             <div class="mb-6">
@@ -50,7 +51,7 @@
                 class="
                   shadow
                   appearance-none
-                  border border-red-500
+                  border
                   rounded
                   w-full
                   py-2
@@ -58,12 +59,13 @@
                   text-gray-700
                   mb-3
                   leading-tight
-                  focus:outline-none
-                  focus:shadow-outline
+                  focus:outline-none focus:shadow-outline
                 "
                 id="password"
                 type="password"
                 placeholder="******************"
+                v-model="password"
+                required
               />
               <p class="text-red-500 text-xs italic">
                 Please choose a password.
@@ -79,10 +81,10 @@
                   py-2
                   px-4
                   rounded
-                  focus:outline-none
-                  focus:shadow-outline
+                  focus:outline-none focus:shadow-outline
                 "
                 type="button"
+                @click="login"
               >
                 Sign In
               </button>
@@ -115,7 +117,7 @@
             <div class="mb-4">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
-                for="username"
+                for="firstname"
               >
                 First Name
               </label>
@@ -130,18 +132,19 @@
                   px-3
                   text-gray-700
                   leading-tight
-                  focus:outline-none
-                  focus:shadow-outline
+                  focus:outline-none focus:shadow-outline
                 "
                 id="username"
                 type="text"
-                placeholder="Username"
+                placeholder="First Name"
+                v-model="firstName"
+                required
               />
             </div>
             <div class="mb-4">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
-                for="username"
+                for="lastname"
               >
                 Last Name
               </label>
@@ -156,18 +159,19 @@
                   px-3
                   text-gray-700
                   leading-tight
-                  focus:outline-none
-                  focus:shadow-outline
+                  focus:outline-none focus:shadow-outline
                 "
                 id="username"
                 type="text"
-                placeholder="Username"
+                placeholder="Last Name"
+                v-model="lastName"
+                required
               />
             </div>
             <div class="mb-4">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
-                for="username"
+                for="email"
               >
                 Email
               </label>
@@ -182,12 +186,13 @@
                   px-3
                   text-gray-700
                   leading-tight
-                  focus:outline-none
-                  focus:shadow-outline
+                  focus:outline-none focus:shadow-outline
                 "
                 id="username"
                 type="text"
-                placeholder="Username"
+                placeholder="Email"
+                v-model="registerEmail"
+                required
               />
             </div>
             <div class="mb-6">
@@ -209,12 +214,13 @@
                   text-gray-700
                   mb-3
                   leading-tight
-                  focus:outline-none
-                  focus:shadow-outline
+                  focus:outline-none focus:shadow-outline
                 "
                 id="password"
                 type="password"
                 placeholder="******************"
+                v-model="registerPassword"
+                required
               />
               <p class="text-red-500 text-xs italic">
                 Please choose a password.
@@ -230,12 +236,12 @@
                   py-2
                   px-4
                   rounded
-                  focus:outline-none
-                  focus:shadow-outline
+                  focus:outline-none focus:shadow-outline
                 "
                 type="button"
+                @click="register"
               >
-                Sign In
+                Create Account
               </button>
               <a
                 class="
@@ -253,19 +259,17 @@
           </form>
         </div>
       </div>
-      <div class="flex justify-center my-4">
+
+      <p class="text-center font-light my-4">or</p>
+
+      <div class="flex justify-center my-4 gap-4">
         <template>
           <button
-            v-google-signin-button="clientId"
-            class="google-signin-button"
+            @click="googleSignIn"
+            class="google-signin-button flex justify-center items-center gap-3"
           >
-            Continue with Google
-          </button>
-        </template>
-
-        <template>
-          <button v-facebook-login-button="appId" class="facebook-login-button">
-            Continue with Facebook
+            <img class="w-6 h-6" src="../assets/google.svg" alt="google icon" />
+            <span>Continue with Google</span>
           </button>
         </template>
       </div>
@@ -277,6 +281,8 @@
 import Header from "../components/Header.vue";
 import GoogleSignInButton from "vue-google-signin-button-directive";
 import FacebookLoginButton from "vue-facebook-login-button-directive";
+import { mapActions } from "vuex";
+
 export default {
   name: "Auth",
   components: {
@@ -287,24 +293,65 @@ export default {
     FacebookLoginButton,
   },
   data: () => ({
-    clientId:
-      "430662087974-qrmkevsh9jhp16vsbif0c1tstt5vctf2.apps.googleusercontent.com",
-    appId: "592351685084311",
+    email: "",
+    password: "",
+    registerEmail: "",
+    registerPassword: "",
+    firstName: "",
+    lastName: "",
   }),
   methods: {
-    OnGoogleAuthSuccess(idToken) {
-      // Receive the idToken and make your magic with the backend
-      console.log(idToken);
+    ...mapActions(["CREATE_ACCOUNT", "LOGIN_TO_ACCOUNT", "GOOGLE_AUTH"]),
+
+    googleSignIn() {
+      this.GOOGLE_AUTH().then(() => {
+        this.$router.push({ path: `/` });
+      });
     },
-    OnGoogleAuthFail(error) {
-      console.log(error);
+
+    register(e) {
+      e.preventDefault();
+
+      if (
+        !this.firstName &&
+        !this.lastName &&
+        !this.registerEmail &&
+        !this.registerPassword
+      ) {
+        alert("Please fill out all the fields before submitting");
+      } else {
+        this.CREATE_ACCOUNT({
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.registerEmail,
+          password: this.registerPassword,
+        }).then(() => {
+          this.firstName = "";
+          this.lastName = "";
+          this.registerEmail = "";
+          this.registerPassword = "";
+
+          this.$router.push({ path: `/` });
+        });
+      }
     },
-    OnFacebookAuthSuccess(idToken) {
-      // Receive the idToken and make your magic with the backend
-      console.log(idToken)
-    },
-    OnFacebookAuthFail(error) {
-      console.log(error);
+
+    login(e) {
+      e.preventDefault();
+
+      if (!this.email && !this.password) {
+        alert("Please fill out all fields before submitting");
+      } else {
+        this.LOGIN_TO_ACCOUNT({
+          email: this.email,
+          password: this.password,
+        }).then(() => {
+          this.email = "";
+          this.password = "";
+
+          this.$router.push({ path: `/` });
+        });
+      }
     },
   },
 };
@@ -316,21 +363,13 @@ export default {
 }
 
 .google-signin-button {
-  color: white;
-  background-color: red;
-  height: 50px;
-  font-size: 16px;
-  border-radius: 10px;
-  padding: 10px 20px 25px 20px;
+  color: #111;
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgb(5, 100, 32);
+  width: 300px;
 }
-
-.facebook-login-button {
-    color: white;
-    background-color: #3b5998;
-    height: 50px;
-    font-size: 16px;
-    border-radius: 10px;
-    padding: 10px 20px 25px 20px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  }
 </style>
